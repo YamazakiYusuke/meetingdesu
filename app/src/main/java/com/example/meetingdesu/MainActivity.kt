@@ -10,6 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.meetingdesu.database.AppDatabase
+import com.example.meetingdesu.repository.MeetingInfoRepository
+import com.example.meetingdesu.ui.compose.screen.MeetingInfoScreen
+import com.example.meetingdesu.ui.compose.viewModel.MeetingInfoViewModel
 import com.example.meetingdesu.ui.theme.MeetingDesuTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,25 +26,15 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    MeetingInfoScreen(
+                        MeetingInfoViewModel(
+                            MeetingInfoRepository(
+                                AppDatabase.getInstance(this).meetingDao()
+                            )
+                        )
+                    )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MeetingDesuTheme {
-        Greeting("Android")
     }
 }
