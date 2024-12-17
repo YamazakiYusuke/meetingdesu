@@ -141,16 +141,22 @@ class MeetingInfoViewModel(
     }
 
     fun sendMeetingsInfo() {
-        val text = _state.value.filter { it.doToday }.map {  meeting ->
-            val start = meeting.startTimeLocalTime().toString(DateTimeFormatterType.HHmm)
-            val end = meeting.endTimeLocalTime().toString(DateTimeFormatterType.HHmm)
-            val speak = if (meeting.willSpeak) {
-                "話す"
-            } else {
-                "話さない"
+        val todayMeeting = _state.value.filter { it.doToday }
+        val text = if (todayMeeting.isEmpty()) {
+            "今日はミーティングなし"
+        } else {
+            _state.value.filter { it.doToday }.joinToString(separator = "\n") { meeting ->
+                val start = meeting.startTimeLocalTime().toString(DateTimeFormatterType.HHmm)
+                val end = meeting.endTimeLocalTime().toString(DateTimeFormatterType.HHmm)
+                val speak = if (meeting.willSpeak) {
+                    "話す"
+                } else {
+                    "話さない"
+                }
+                "$start~$end($speak)"
             }
-            "$start~$end($speak)"
-        }.joinToString(separator = "\n")
+        }
+
         val newEvent = MeetingInfoEvent.SendMeetingInfo(text)
         _uiState.value = _uiState.value.copy(
             events = _uiState.value.events + newEvent
