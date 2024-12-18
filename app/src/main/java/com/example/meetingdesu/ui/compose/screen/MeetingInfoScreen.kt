@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,7 +20,6 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,14 +27,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import com.example.meetingdesu.MainActivity
-import com.example.meetingdesu.R
 import com.example.meetingdesu.extension.debouncedClickable
-import com.example.meetingdesu.extension.toSp
 import com.example.meetingdesu.ui.compose.ImmutableList
 import com.example.meetingdesu.ui.compose.dialog.DeleteAlertDialog
 import com.example.meetingdesu.ui.compose.dialog.TimePickerWithDialog
@@ -46,8 +40,8 @@ import com.example.meetingdesu.ui.compose.view_parts.MeetingInfoListItem
 import com.example.meetingdesu.ui.compose.view_parts.MeetingInfoListItemModel
 import com.example.meetingdesu.ui.theme.MeetingDesuTheme
 import com.example.meetingdesu.ui.theme.MeetingInfoScreenBackground
-import com.example.meetingdesu.ui.theme.MeetingInfoScreenCreateNewButton
-import com.example.meetingdesu.ui.theme.MeetingInfoScreenCreateNewButtonIcon
+import com.example.meetingdesu.ui.theme.MeetingInfoScreenButton
+import com.example.meetingdesu.ui.theme.MeetingInfoScreenButtonIcon
 import java.time.LocalTime
 
 @Composable
@@ -208,7 +202,7 @@ private fun CreateNewButton(
         modifier = Modifier
             .size(100.dp)
             .clip(RoundedCornerShape(50.dp))
-            .background(MeetingInfoScreenCreateNewButton)
+            .background(MeetingInfoScreenButton)
             .debouncedClickable {
                 onClick()
             },
@@ -218,7 +212,7 @@ private fun CreateNewButton(
             imageVector = Icons.Default.Add,
             contentDescription = "Create new icon",
             modifier = Modifier.size(30.dp),
-            tint = MeetingInfoScreenCreateNewButtonIcon
+            tint = MeetingInfoScreenButtonIcon
         )
     }
 }
@@ -231,7 +225,7 @@ private fun ShareButton(
         modifier = Modifier
             .size(100.dp)
             .clip(RoundedCornerShape(50.dp))
-            .background(MeetingInfoScreenCreateNewButton)
+            .background(MeetingInfoScreenButton)
             .debouncedClickable {
                 onClick()
             },
@@ -241,7 +235,7 @@ private fun ShareButton(
             imageVector = Icons.AutoMirrored.Filled.Send,
             contentDescription = "Share icon",
             modifier = Modifier.size(30.dp),
-            tint = MeetingInfoScreenCreateNewButtonIcon
+            tint = MeetingInfoScreenButtonIcon
         )
     }
 }
