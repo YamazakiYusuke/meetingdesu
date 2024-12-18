@@ -156,10 +156,10 @@ fun MeetingInfoScreenContent(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(20.dp)
+                .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
         ) {
             LazyColumn(
-                contentPadding = PaddingValues(top = 10.dp, bottom = 100.dp)
+                contentPadding = PaddingValues(top = 30.dp, bottom = 160.dp)
             ) {
                 items(listItems.size) { index ->
                     val item = listItems[index]
@@ -180,7 +180,7 @@ fun MeetingInfoScreenContent(
         Row(
             modifier = Modifier.padding(
                 end = 15.dp,
-                bottom = 10.dp
+                bottom = 40.dp
             )
         ) {
             CreateNewButton(
