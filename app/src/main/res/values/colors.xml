@@ -7,12 +7,4 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="meeting_info_list_item_background">#FF0D1E25</color>
-    <color name="meeting_info_list_item_text_on">#FFDAE4EB</color>
-    <color name="meeting_info_list_item_text_off">#FF919191</color>
-    <color name="meeting_info_screen_background">#FF0A1519</color>
-    <color name="meeting_info_screen_header">#FF182126</color>
-    <color name="meeting_info_screen_header_text">#FFDEE9EE</color>
-    <color name="meeting_info_screen_create_new_button">#FF68D3FF</color>
-    <color name="meeting_info_screen_create_new_button_icon">#FF003646</color>
 </resources>

@@ -4,8 +4,6 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.meetingdesu.database.room.entity.Meeting
-import com.example.meetingdesu.extension.DateTimeFormatterType
-import com.example.meetingdesu.extension.toString
 import com.example.meetingdesu.repository.IMeetingInfoRepository
 import com.example.meetingdesu.ui.compose.view_parts.MeetingInfoListItemModel
 import kotlinx.coroutines.Dispatchers
@@ -24,15 +22,18 @@ class MeetingInfoViewModel(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getAll().collect{ meetings ->
-                _state.value = meetings
+            repository.getAll().collect { meetings ->
+                val sortedMeetings = meetings.sortedWith(
+                    compareBy({ it.startTimeLocalTime() }, { it.endTimeLocalTime() })
+                )
+                _state.value = sortedMeetings
                 _uiState.value = _uiState.value.copy(
-                    listItems = meetings.map { meeting ->
+                    listItems = sortedMeetings.map { meeting ->
                         MeetingInfoListItemModel(
                             id = meeting.id,
                             doToday = meeting.doToday,
-                            startTime = meeting.startTimeLocalTime().toString(DateTimeFormatterType.HHmm),
-                            endTime = meeting.endTimeLocalTime().toString(DateTimeFormatterType.HHmm),
+                            startTime = meeting.startTime,
+                            endTime = meeting.endTime,
                             willSpeak = meeting.willSpeak,
                         )
                     }
@@ -106,7 +107,8 @@ class MeetingInfoViewModel(
 
     fun showTimerPickerDialogToEditStart(id: Int) {
         val meeting = _state.value.firstOrNull { it.id == id } ?: return
-        val newEvent = MeetingInfoEvent.ShowTimePickerDialogToEditStart(id, meeting.startTimeLocalTime())
+        val newEvent =
+            MeetingInfoEvent.ShowTimePickerDialogToEditStart(id, meeting.startTimeLocalTime())
         _uiState.value = _uiState.value.copy(
             events = _uiState.value.events + newEvent
         )
@@ -114,7 +116,8 @@ class MeetingInfoViewModel(
 
     fun showTimerPickerDialogToEditEnd(id: Int) {
         val meeting = _state.value.firstOrNull { it.id == id } ?: return
-        val newEvent = MeetingInfoEvent.ShowTimePickerDialogToEditEnd(id, meeting.endTimeLocalTime())
+        val newEvent =
+            MeetingInfoEvent.ShowTimePickerDialogToEditEnd(id, meeting.endTimeLocalTime())
         _uiState.value = _uiState.value.copy(
             events = _uiState.value.events + newEvent
         )
@@ -129,11 +132,9 @@ class MeetingInfoViewModel(
 
     fun showAlertDialogToDeleteMeeting(id: Int) {
         val meeting = _state.value.firstOrNull { it.id == id } ?: return
-        val start = meeting.startTimeLocalTime().toString(DateTimeFormatterType.HHmm)
-        val end = meeting.endTimeLocalTime().toString(DateTimeFormatterType.HHmm)
         val newEvent = MeetingInfoEvent.ShowAlertDialogToDeleteMeeting(
             id = id,
-            meetingName = "$start~$end"
+            meetingName = "${meeting.startTime}~${meeting.endTime}"
         )
         _uiState.value = _uiState.value.copy(
             events = _uiState.value.events + newEvent
@@ -146,14 +147,12 @@ class MeetingInfoViewModel(
             "今日はミーティングなし"
         } else {
             _state.value.filter { it.doToday }.joinToString(separator = "\n") { meeting ->
-                val start = meeting.startTimeLocalTime().toString(DateTimeFormatterType.HHmm)
-                val end = meeting.endTimeLocalTime().toString(DateTimeFormatterType.HHmm)
                 val speak = if (meeting.willSpeak) {
                     "話す"
                 } else {
                     "話さない"
                 }
-                "$start~$end($speak)"
+                "${meeting.startTime}~${meeting.endTime}($speak)"
             }
         }
 
@@ -179,9 +178,15 @@ data class MeetingInfoUiState(
 
 sealed class MeetingInfoEvent {
     data class Error(val message: String) : MeetingInfoEvent()
-    data class ShowTimePickerDialogToEditStart(val id: Int, val initTime: LocalTime) : MeetingInfoEvent()
-    data class ShowTimePickerDialogToEditEnd(val id: Int, val initTime: LocalTime) : MeetingInfoEvent()
+    data class ShowTimePickerDialogToEditStart(val id: Int, val initTime: LocalTime) :
+        MeetingInfoEvent()
+
+    data class ShowTimePickerDialogToEditEnd(val id: Int, val initTime: LocalTime) :
+        MeetingInfoEvent()
+
     data object ShowTimePickerDialogToCreateNew : MeetingInfoEvent()
-    data class ShowAlertDialogToDeleteMeeting(val id: Int, val meetingName: String) : MeetingInfoEvent()
+    data class ShowAlertDialogToDeleteMeeting(val id: Int, val meetingName: String) :
+        MeetingInfoEvent()
+
     data class SendMeetingInfo(val text: String) : MeetingInfoEvent()
 }

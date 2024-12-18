@@ -45,11 +45,15 @@ import com.example.meetingdesu.ui.compose.viewModel.MeetingInfoViewModel
 import com.example.meetingdesu.ui.compose.view_parts.MeetingInfoListItem
 import com.example.meetingdesu.ui.compose.view_parts.MeetingInfoListItemModel
 import com.example.meetingdesu.ui.theme.MeetingDesuTheme
+import com.example.meetingdesu.ui.theme.MeetingInfoScreenBackground
+import com.example.meetingdesu.ui.theme.MeetingInfoScreenCreateNewButton
+import com.example.meetingdesu.ui.theme.MeetingInfoScreenCreateNewButtonIcon
 import java.time.LocalTime
 
 @Composable
 fun MeetingInfoScreen(
     viewModel: MeetingInfoViewModel,
+    modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
     state.events.firstOrNull()?.let { event ->
@@ -127,6 +131,7 @@ fun MeetingInfoScreen(
 
 
     MeetingInfoScreenContent(
+        modifier = modifier,
         listItems = ImmutableList(state.listItems),
         switchDoToday = { id, newValue -> viewModel.changeDoToday(id, newValue) },
         onTapStartTime = { id -> viewModel.showTimerPickerDialogToEditStart(id) },
@@ -151,7 +156,7 @@ fun MeetingInfoScreenContent(
     onTapSendButton: () -> Unit,
 ) {
     Box(
-        modifier = Modifier.background(colorResource(id = R.color.meeting_info_screen_background)),
+        modifier = Modifier.background(MeetingInfoScreenBackground),
         contentAlignment = Alignment.BottomEnd
     ) {
         Column(
@@ -159,7 +164,6 @@ fun MeetingInfoScreenContent(
                 .fillMaxSize()
                 .padding(20.dp)
         ) {
-            Header()
             LazyColumn(
                 contentPadding = PaddingValues(top = 10.dp, bottom = 100.dp)
             ) {
@@ -197,24 +201,6 @@ fun MeetingInfoScreenContent(
 }
 
 @Composable
-private fun Header() {
-    Box(
-        modifier = Modifier
-            .background(colorResource(id = R.color.meeting_info_screen_header))
-            .fillMaxWidth()
-            .height(50.dp)
-            .padding(start = 15.dp),
-        contentAlignment = Alignment.CenterStart
-    ) {
-        Text(
-            text = "Meeting",
-            fontSize = 25.dp.toSp(),
-            color = colorResource(id = R.color.meeting_info_screen_header_text)
-        )
-    }
-}
-
-@Composable
 private fun CreateNewButton(
     onClick: () -> Unit,
 ) {
@@ -222,7 +208,7 @@ private fun CreateNewButton(
         modifier = Modifier
             .size(100.dp)
             .clip(RoundedCornerShape(50.dp))
-            .background(colorResource(id = R.color.meeting_info_screen_create_new_button))
+            .background(MeetingInfoScreenCreateNewButton)
             .debouncedClickable {
                 onClick()
             },
@@ -232,7 +218,7 @@ private fun CreateNewButton(
             imageVector = Icons.Default.Add,
             contentDescription = "Create new icon",
             modifier = Modifier.size(30.dp),
-            tint = colorResource(id = R.color.meeting_info_screen_create_new_button_icon)
+            tint = MeetingInfoScreenCreateNewButtonIcon
         )
     }
 }
@@ -245,7 +231,7 @@ private fun ShareButton(
         modifier = Modifier
             .size(100.dp)
             .clip(RoundedCornerShape(50.dp))
-            .background(colorResource(id = R.color.meeting_info_screen_create_new_button))
+            .background(MeetingInfoScreenCreateNewButton)
             .debouncedClickable {
                 onClick()
             },
@@ -255,7 +241,7 @@ private fun ShareButton(
             imageVector = Icons.AutoMirrored.Filled.Send,
             contentDescription = "Share icon",
             modifier = Modifier.size(30.dp),
-            tint = colorResource(id = R.color.meeting_info_screen_create_new_button_icon)
+            tint = MeetingInfoScreenCreateNewButtonIcon
         )
     }
 }

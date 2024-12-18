@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +33,9 @@ import com.example.meetingdesu.R
 import com.example.meetingdesu.extension.debouncedClickable
 import com.example.meetingdesu.extension.toSp
 import com.example.meetingdesu.ui.theme.MeetingDesuTheme
+import com.example.meetingdesu.ui.theme.MeetingInfoListItemBackground
+import com.example.meetingdesu.ui.theme.MeetingInfoListItemTextOff
+import com.example.meetingdesu.ui.theme.MeetingInfoListItemTextOn
 import java.time.LocalTime
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -49,7 +53,7 @@ fun MeetingInfoListItem(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(25.dp))
-            .background(colorResource(id = R.color.meeting_info_list_item_background))
+            .background(MeetingInfoListItemBackground)
             .combinedClickable(
                 onClick = {},
                 onLongClick = {
@@ -67,9 +71,9 @@ fun MeetingInfoListItem(
                 FontWeight.Normal
             }
             val color = if (data.doToday) {
-                R.color.meeting_info_list_item_text_on
+                MeetingInfoListItemTextOn
             } else {
-                R.color.meeting_info_list_item_text_off
+                MeetingInfoListItemTextOff
             }
             MeetingTime(
                 startTime = data.startTime,
@@ -112,8 +116,7 @@ private fun MeetingTime(
     startTime: String,
     endTime: String,
     fontWeight: FontWeight,
-    @ColorRes
-    textColor: Int,
+    textColor: Color,
     onTapStartTime: () -> Unit = { },
     onTapEndTime: () -> Unit = { },
 ) {
@@ -121,7 +124,7 @@ private fun MeetingTime(
         Text(
             text = startTime,
             fontSize = 38.dp.toSp(),
-            color = colorResource(id = textColor),
+            color = textColor,
             fontWeight = fontWeight,
             modifier = Modifier.debouncedClickable {
                 onTapStartTime()
@@ -130,13 +133,13 @@ private fun MeetingTime(
         Text(
             text = "~",
             fontSize = 38.dp.toSp(),
-            color = colorResource(id = textColor),
+            color = textColor,
             fontWeight = fontWeight,
         )
         Text(
             text = endTime,
             fontSize = 38.dp.toSp(),
-            color = colorResource(id = textColor),
+            color = textColor,
             fontWeight = fontWeight,
             modifier = Modifier.debouncedClickable {
                 onTapEndTime()
@@ -148,8 +151,7 @@ private fun MeetingTime(
 @Composable
 private fun SpeakIcon(
     willSpeak: Boolean,
-    @ColorRes
-    color: Int,
+    color: Color,
     switchWillSpeak: (Boolean) -> Unit = {},
 ) {
     Box(
@@ -166,7 +168,7 @@ private fun SpeakIcon(
         Icon(
             imageVector = imageVector,
             contentDescription = "speak icon",
-            tint = colorResource(id = color)
+            tint = color
         )
     }
 }
